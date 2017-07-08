@@ -22,7 +22,10 @@
   "dependencies": {
     "better-npm-run": "0.0.15",
     "express": "4.15.3",
+    "isomorphic-fetch": "2.2.1",
     "npm-run-all": "4.0.2",
+    "object-assign": "4.1.1",
+    "promise": "8.0.0",
     "react": "15.6.1",
     "react-dom": "15.6.1",
     "serve-favicon": "2.4.3"

@@ -2,10 +2,16 @@ const webpack = require('webpack')
 const path = require('path')
 
 const root = path.resolve(__dirname, '..')
+const srcPath = path.resolve(root, 'web')
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
-  entry: './web/index.js',
+  entry: {
+    main: [
+      require.resolve('./polyfills-client'),
+      path.resolve(srcPath, 'index.js')
+    ]
+  },
   output: {
     filename: '[name].js',
     path: path.resolve(root, 'public', 'build'),
