@@ -33,7 +33,7 @@ const dev = {
     {
       loader: 'babel-loader',
       options: {
-        presets: babelPresets,
+        presets: babelPresets.concat(['react-hmre']),
         plugins: [transformRuntime],
       }
     }
