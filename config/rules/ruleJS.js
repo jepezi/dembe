@@ -40,6 +40,26 @@ const dev = {
   ]
 }
 
+const prod = {
+  test: /.js$/,
+  include: paths.src,
+  use: [
+    {
+      loader: 'babel-loader',
+      options: {
+        presets: babelPresets,
+        plugins: [
+          transformRuntime,
+          'transform-react-inline-elements',
+          'transform-react-pure-class-to-function',
+          'transform-react-constant-elements'
+        ]
+      }
+    }
+  ]
+}
+
 module.exports = {
-  dev
+  dev,
+  prod,
 }
