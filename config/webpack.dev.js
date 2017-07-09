@@ -22,6 +22,7 @@ module.exports = {
     rules: [
       ruleJS.dev,
       ruleCSS.global.dev,
+      ruleCSS.cssModule.dev,
       ruleStatic,
     ]
   },
