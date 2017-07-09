@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import Header from '../Header/Header'
+import Header from 'Header/Header'
 import css from './App.module.scss'
 
 class App extends React.Component {
