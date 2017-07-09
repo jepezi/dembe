@@ -15,3 +15,4 @@ suppress_type=$FlowFixMe
 suppress_comment=\\(.\\|\n\\)*\\$FlowIssue
 module.system.node.resolve_dirname=node_modules
 module.system.node.resolve_dirname=web
+module.name_mapper='.*\(.s?css\)' -> '<PROJECT_ROOT>/config/flow-stub-css.js'

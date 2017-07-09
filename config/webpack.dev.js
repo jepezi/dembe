@@ -2,6 +2,8 @@ const webpack = require('webpack')
 const path = require('path')
 const paths = require('./paths')
 const ruleJS = require('./rules/ruleJS')
+const ruleCSS = require('./rules/ruleCSS')
+const ruleStatic = require('./rules/ruleStatic')
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
@@ -19,6 +21,8 @@ module.exports = {
   module: {
     rules: [
       ruleJS.dev,
+      ruleCSS.global.dev,
+      ruleStatic,
     ]
   },
   plugins: [
