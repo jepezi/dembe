@@ -20,7 +20,7 @@ class About extends React.Component {
 
 function mapState(s) {
   return {
-    count: s,
+    count: s.counter,
   }
 }
 
