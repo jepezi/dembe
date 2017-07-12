@@ -64,6 +64,7 @@
     "react-dom": "15.6.1",
     "react-router": "3.0.5",
     "react-universal-component": "1.2.1",
+    "redux": "3.7.1",
     "serve-favicon": "2.4.3",
     "webpack-flush-chunks": "1.1.10"
   },
