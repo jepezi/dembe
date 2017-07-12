@@ -1,6 +1,6 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const paths = require('../paths')
-
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
 // any.module.scss (dev)
 const cssModuleDev = {
   test: /\.module\.s?css$/,
@@ -31,8 +31,8 @@ const cssModuleDev = {
 
 const cssModuleProd = {
   test: /\.module\.s?css$/,
-  use: ExtractTextPlugin.extract({
-    fallback: 'style-loader',
+  use: ExtractCssChunks.extract({
+    // fallback: 'style-loader',
     use: [
       {
         loader: 'css-loader',
@@ -110,8 +110,8 @@ const globalDev = {
 // any.scss (prod)
 const globalProd = {
   test: /^((?!\.module\.).)*\.s?css$/,
-  use: ExtractTextPlugin.extract({
-    fallback: 'style-loader',
+  use: ExtractCssChunks.extract({
+    // fallback: 'style-loader',
     use: [
       {
         loader: 'css-loader',

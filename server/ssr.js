@@ -7,7 +7,9 @@ const matchRoute = require(
   path.resolve(paths.build, 'js/matchRoute.js')
 ).default
 
+const stats = require('../public/build/stats.json')
+
 module.exports = function(req, res) {
-  return matchRoute(req)
+  return matchRoute(req, {stats})
     .then(responder(res))
 }

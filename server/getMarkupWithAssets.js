@@ -11,9 +11,9 @@ const webpackManifest = fs.readFileSync(
 module.exports = function getMarkupWithAssets(filepath) {
   const markup = fs
     .readFileSync(filepath, 'utf-8')
-    .replace('___CSS___', stat.main.css)
-    .replace('___VENDOR___', stat.vendor.js)
-    .replace('___MAIN___', stat.main.js)
+    // .replace('___CSS___', stat.main.css)
+    // .replace('___VENDOR___', stat.vendor.js)
+    // .replace('___MAIN___', stat.main.js)
     .replace('___INLINED_WEBPACK_MANIFEST___', webpackManifest)
 
   return markup

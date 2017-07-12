@@ -1,7 +1,8 @@
 const webpack = require('webpack')
 const path = require('path')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const AssetsPlugin = require('assets-webpack-plugin')
+const StatsPlugin = require('stats-webpack-plugin')
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
 const paths = require('./paths')
 const vendors = require('./vendors')
 const ruleJS = require('./rules/ruleJS')
@@ -33,6 +34,14 @@ module.exports = {
   },
   recordsPath: path.resolve(paths.root, 'webpack-records.json'),
   plugins: [
+    new StatsPlugin('stats.json', {
+      chunkModules: true,
+      exclude: [/node_modules[\\\/]react/],
+    }),
+    new ExtractCssChunks({
+      filename: 'css/[name].[contenthash].css',
+    }),
+    new webpack.HashedModuleIdsPlugin(), // only needed when server built with webpack
     new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
@@ -52,10 +61,6 @@ module.exports = {
       children: true,
       async: true,
       minChunks: 4 // number of chunks containing a module before it's moved into common chunk. Must be >= 4.
-    }),
-    new ExtractTextPlugin({
-      filename: 'css/[name].[contenthash].css',
-      allChunks: true
     }),
     new AssetsPlugin({
       filename: 'webpack-assets.json',

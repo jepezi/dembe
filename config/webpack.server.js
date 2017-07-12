@@ -21,7 +21,9 @@ module.exports = {
     publicPath: '/build/',
     libraryTarget: 'commonjs2'
   },
-  externals: [nodeExternals()],
+  externals: [nodeExternals({
+    whitelist: [/\.bin|react-universal-component|require-universal-module|webpack-flush-chunks/],
+  })],
   module: {
     rules: [
       ruleJS.server,
@@ -39,17 +41,11 @@ module.exports = {
         NODE_ENV: JSON.stringify('production')
       }
     }),
+    new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false
     }),
   ],
-  node: {
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-    dns: 'empty',
-    crypto: 'empty'
-  }
 }
