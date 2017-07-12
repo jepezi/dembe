@@ -1,8 +1,8 @@
 // @flow
 import React from 'react'
+import {connect} from 'react-redux'
 
 class About extends React.Component {
-  state = {count: 0}
   render() {
     return (
       <div>
@@ -11,14 +11,28 @@ class About extends React.Component {
           <div>
             We are pug lover community. All things pugs.
           </div>
-          <button onClick={this._handleClick}>Click {this.state.count}</button>
+          <button onClick={this.props.handleClick}>Click {this.props.count}</button>
         </div>
       </div>
     )
   }
-  _handleClick = () => {
-    this.setState(s => ({count: s.count + 1}))
+}
+
+function mapState(s) {
+  return {
+    count: s,
   }
 }
 
-export default About
+function mapDispatch(dispatch) {
+  return {
+    handleClick: () => {
+      dispatch({type: 'INCREMENT'})
+    },
+  }
+}
+
+export default connect(
+  mapState,
+  mapDispatch
+)(About)
