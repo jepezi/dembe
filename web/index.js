@@ -3,12 +3,11 @@ import './index.scss'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {match, Router, browserHistory} from 'react-router'
-import routes from './routes'
-import {createStore} from 'redux'
 import {Provider} from 'react-redux'
-import reducers from './reducers'
+import routes from './routes'
+import configureStore from './configureStore'
 
-const store = createStore(reducers)
+const store = configureStore()
 
 match(
   {history: browserHistory, routes},
