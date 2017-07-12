@@ -2,6 +2,7 @@
 import React from 'react'
 
 class About extends React.Component {
+  state = {count: 0}
   render() {
     return (
       <div>
@@ -10,9 +11,13 @@ class About extends React.Component {
           <div>
             We are pug lover community. All things pugs.
           </div>
+          <button onClick={this._handleClick}>Click {this.state.count}</button>
         </div>
       </div>
     )
+  }
+  _handleClick = () => {
+    this.setState(s => ({count: s.count + 1}))
   }
 }
 
