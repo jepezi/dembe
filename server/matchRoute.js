@@ -1,16 +1,17 @@
 // @flow
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import { match, RouterContext } from 'react-router'
 import { flushModuleIds } from 'react-universal-component/server'
 import flushChunks from 'webpack-flush-chunks'
-import routes from '../web/routes'
-import {createStore} from 'redux'
 import {Provider} from 'react-redux'
-import reducers from '../web/reducers'
+import { match, RouterContext } from 'react-router'
+import routes from '../web/routes'
+import configureStore from '../web/configureStore'
+import {fetchPosts} from '../web/actions'
 
-function matchRoute(req: any, {stats}: any) {
-  const store = createStore(reducers)
+async function matchRoute(req: any, {stats}: any) {
+  const store = configureStore()
+  await store.dispatch(fetchPosts())
   return new Promise((resolve, reject) => {
     match(
       {routes, location: req.url},
@@ -38,7 +39,12 @@ function matchRoute(req: any, {stats}: any) {
             after: ['main'],
           })
 
-          resolve({content, scripts: js, styles})
+          resolve({
+            content,
+            scripts: js,
+            styles,
+            data: store.getState(),
+          })
         } else {
           console.warn('not found', req.url)
         }

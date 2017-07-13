@@ -7,7 +7,7 @@ import {Provider} from 'react-redux'
 import routes from './routes'
 import configureStore from './configureStore'
 
-const store = configureStore()
+const store = configureStore({initialState: window.__REDUXDATA__})
 
 match(
   {history: browserHistory, routes},

@@ -9,10 +9,11 @@ function thunk({ dispatch, getState }) {
       next(action)
 }
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-export default function configureStore() {
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+export default function configureStore({initialState} = {}) {
   const store = createStore(
     reducers,
+    initialState,
     composeEnhancers(
       applyMiddleware(thunk, promiseMiddleware())
     ),
