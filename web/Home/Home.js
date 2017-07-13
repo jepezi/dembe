@@ -1,27 +1,34 @@
 // @flow
 import React from 'react'
+import {connect} from 'react-redux'
 import PostList from 'Posts/PostList'
+import {loadPosts} from '../actions'
 
 class Home extends React.Component {
-  state = {isLoading: false, data: null}
   componentDidMount() {
-    this.setState({isLoading: true})
-    fetch('http://jsonplaceholder.typicode.com/posts?userId=1')
-      .then(r => r.json())
-      .then(r => this.setState({data: r, isLoading: false}))
+    this.props.dispatch(loadPosts())
   }
   render() {
-    const {isLoading, data} = this.state
+    const {posts} = this.props
+    console.warn(posts)
     return (
       <div>
         <h1>Latest Posts</h1>
         <div>
-          {isLoading && <div>Loading...</div>}
-          <PostList data={data} />
+          {!posts.data && <div>Loading...</div>}
+          <PostList data={posts.data} />
         </div>
       </div>
     )
   }
 }
 
-export default Home
+function mapState(s) {
+  return {
+    posts: s.posts,
+  }
+}
+
+export default connect(
+  mapState,
+)(Home)
