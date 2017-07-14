@@ -3,11 +3,9 @@ import React from 'react'
 import {connect} from 'react-redux'
 import PostList from 'Posts/PostList'
 import {loadPosts} from '../actions'
+import fetchData from '../fetchData'
 
 class Home extends React.Component {
-  componentDidMount() {
-    this.props.dispatch(loadPosts())
-  }
   render() {
     const {posts} = this.props
     return (
@@ -32,8 +30,8 @@ const Connected = connect(
   mapState,
 )(Home)
 
-Connected.fetchData = store => {
+const Prefetched = fetchData(store => {
   return store.dispatch(loadPosts())
-}
+})(Connected)
 
-export default Connected
+export default Prefetched
