@@ -1,37 +1,39 @@
 // @flow
 import React from 'react'
-import {connect} from 'react-redux'
+import {gql, graphql} from 'react-apollo'
 import PostList from 'Posts/PostList'
-import {loadPosts} from '../actions'
-import fetchData from '../fetchData'
 
 class Home extends React.Component {
   render() {
-    const {posts} = this.props
+    const {data: {viewer, error, loading}} = this.props
+    if (error != null) {
+      return (
+        <p>There is error</p>
+      )
+    }
     return (
       <div>
         <h1>Latest Posts</h1>
         <div>
-          {!posts.data && <div>Loading...</div>}
-          {posts.data && <PostList data={posts.data.data.viewer.posts} />}
+          {loading && <div>Loading...</div>}
+          {viewer && <PostList data={viewer.posts} />}
         </div>
       </div>
     )
   }
 }
 
-function mapState(s) {
-  return {
-    posts: s.posts,
+const WithData = graphql(gql`
+  query {
+    viewer {
+      id
+      posts {
+        id
+        title
+        description
+      }
+    }
   }
-}
+`)(Home)
 
-const Connected = connect(
-  mapState,
-)(Home)
-
-const Prefetched = fetchData(store => {
-  return store.dispatch(loadPosts())
-})(Connected)
-
-export default Prefetched
+export default WithData
