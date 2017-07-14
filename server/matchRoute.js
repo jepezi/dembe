@@ -9,13 +9,12 @@ import routes from '../web/routes'
 import configureStore from '../web/configureStore'
 import {fetchPosts} from '../web/actions'
 
-async function matchRoute(req: any, {stats}: any) {
+function matchRoute(req: any, {stats}: any) {
   const store = configureStore()
-  await store.dispatch(fetchPosts())
   return new Promise((resolve, reject) => {
     match(
       {routes, location: req.url},
-      (error, redirectLocation, renderProps) => {
+      async (error, redirectLocation, renderProps) => {
         if (error) {
           resolve({error})
         } else if (redirectLocation) {
@@ -25,6 +24,18 @@ async function matchRoute(req: any, {stats}: any) {
             },
           })
         } else if (renderProps) {
+          // Find all static method called `fetchData` and execute, then wait for all promises to resolve. Then resolve with element. At this point, the store is filled with state already.
+          const prefetchMethods = renderProps.components
+            .filter(c => c.fetchData)
+            .reduce((acc, c) => acc.concat(c.fetchData), [])
+
+          console.warn('prefetchMethods',prefetchMethods.length)
+
+          const promises = prefetchMethods
+            .map(prefetch => prefetch(store))
+
+          await Promise.all(promises)
+
           const element = (
             <Provider store={store}>
               <RouterContext {...renderProps} />

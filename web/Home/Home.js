@@ -10,7 +10,6 @@ class Home extends React.Component {
   }
   render() {
     const {posts} = this.props
-    console.warn(posts)
     return (
       <div>
         <h1>Latest Posts</h1>
@@ -29,6 +28,12 @@ function mapState(s) {
   }
 }
 
-export default connect(
+const Connected = connect(
   mapState,
 )(Home)
+
+Connected.fetchData = store => {
+  return store.dispatch(loadPosts())
+}
+
+export default Connected
