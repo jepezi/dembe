@@ -3,14 +3,19 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import { flushModuleIds } from 'react-universal-component/server'
 import flushChunks from 'webpack-flush-chunks'
-import {Provider} from 'react-redux'
 import { match, RouterContext } from 'react-router'
 import routes from '../web/routes'
 import configureStore from '../web/configureStore'
-import {fetchPosts} from '../web/actions'
+import {ApolloClient, createNetworkInterface, ApolloProvider, getDataFromTree} from 'react-apollo'
 
 function matchRoute(req: any, {stats}: any) {
-  const store = configureStore()
+  const client = new ApolloClient({
+    ssrMode: true,
+    networkInterface: createNetworkInterface({
+      uri: 'http://localhost:8000/api/graphql',
+    }),
+  })
+  const store = configureStore({client})
   return new Promise((resolve, reject) => {
     match(
       {routes, location: req.url},
@@ -29,18 +34,19 @@ function matchRoute(req: any, {stats}: any) {
             .filter(c => c.fetchData)
             .reduce((acc, c) => acc.concat(c.fetchData), [])
 
-          console.warn('prefetchMethods',prefetchMethods.length)
-
           const promises = prefetchMethods
             .map(prefetch => prefetch(store))
 
           await Promise.all(promises)
 
           const element = (
-            <Provider store={store}>
+            <ApolloProvider client={client} store={store}>
               <RouterContext {...renderProps} />
-            </Provider>
+            </ApolloProvider>
           )
+
+          await getDataFromTree(element)
+
           const content = ReactDOMServer.renderToString(element)
 
           const moduleIds = flushModuleIds()

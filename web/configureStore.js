@@ -1,6 +1,6 @@
-import {createStore, applyMiddleware, compose} from 'redux'
+import {createStore, applyMiddleware, compose, combineReducers} from 'redux'
 import promiseMiddleware from 'redux-promise-middleware'
-import reducers from './reducers'
+import {posts, counter} from './reducers'
 
 function thunk({ dispatch, getState }) {
   return next => action =>
@@ -10,12 +10,17 @@ function thunk({ dispatch, getState }) {
 }
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
-export default function configureStore({initialState} = {}) {
+
+export default function configureStore({initialState, client} = {}) {
   const store = createStore(
-    reducers,
+    combineReducers({
+      posts,
+      counter,
+      apollo: client.reducer(),
+    }),
     initialState,
     composeEnhancers(
-      applyMiddleware(thunk, promiseMiddleware())
+      applyMiddleware(client.middleware(), thunk, promiseMiddleware())
     ),
   )
   return store
