@@ -11,7 +11,24 @@ export function loadPosts() {
 export function fetchPosts() {
   return {
     type: 'LOAD_POSTS',
-    payload: fetch('https://jsonplaceholder.typicode.com/posts?userId=1')
+    payload: fetch('http://localhost:8000/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `query {
+          viewer {
+            id
+            posts {
+              id
+              title
+              description
+            }
+          }
+        }`,
+      })
+    })
       .then(r => r.json())
   }
 }

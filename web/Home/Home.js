@@ -13,7 +13,7 @@ class Home extends React.Component {
         <h1>Latest Posts</h1>
         <div>
           {!posts.data && <div>Loading...</div>}
-          <PostList data={posts.data} />
+          {posts.data && <PostList data={posts.data.data.viewer.posts} />}
         </div>
       </div>
     )

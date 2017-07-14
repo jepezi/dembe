@@ -5,7 +5,7 @@ const Post = props => {
   return (
     <div>
       <h3>{data.title}</h3>
-      <div>{data.body}</div>
+      <div>{data.description}</div>
     </div>
   )
 }
