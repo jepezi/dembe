@@ -7,7 +7,15 @@ const filepath = path.resolve(paths.public, 'ssr.html')
 const markup = getMarkupWithAssets(filepath)
 
 module.exports = function(res) {
-  return ({error, redirect, status, content, scripts, styles, data}) => {
+  return ({
+    error,
+    redirect,
+    status,
+    content,
+    scripts,
+    styles,
+    data,
+  }) => {
     if (error) {
       return res.status(500).send(error.message)
     }

@@ -36,3 +36,23 @@ export class ClientFetcher extends FetcherBase {
     return super.fetch(...args)
   }
 }
+
+export class ServerFetcher extends FetcherBase {
+  constructor(url) {
+    super(url);
+
+    this.payloads = [];
+  }
+
+  async fetch(...args) {
+    const i = this.payloads.length;
+    this.payloads.push(null);
+    const payload = await super.fetch(...args);
+    this.payloads[i] = payload;
+    return payload;
+  }
+
+  toJSON() {
+    return this.payloads;
+  }
+}

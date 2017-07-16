@@ -3,71 +3,41 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import { flushModuleIds } from 'react-universal-component/server'
 import flushChunks from 'webpack-flush-chunks'
-import { match, RouterContext } from 'react-router'
 import routes from '../web/routes'
-import configureStore from '../web/configureStore'
-import {ApolloClient, createNetworkInterface, ApolloProvider, getDataFromTree} from 'react-apollo'
+import {getFarceResult} from 'found/lib/server'
+import {ServerFetcher} from '../web/fetcher'
+import {historyMiddlewares, render, createResolver} from '../web/router'
 
-function matchRoute(req: any, {stats}: any) {
-  const client = new ApolloClient({
-    ssrMode: true,
-    networkInterface: createNetworkInterface({
-      uri: 'http://localhost:8000/api/graphql',
-    }),
+async function matchRoute(req: any, {stats}: any) {
+  const fetcher = new ServerFetcher('http://localhost:8000/api/graphql')
+
+  const { redirect, status, element } = await getFarceResult({
+    url: req.url,
+    historyMiddlewares,
+    routeConfig: routes,
+    resolver: createResolver(fetcher),
+    render,
   })
-  const store = configureStore({client})
-  return new Promise((resolve, reject) => {
-    match(
-      {routes, location: req.url},
-      async (error, redirectLocation, renderProps) => {
-        if (error) {
-          resolve({error})
-        } else if (redirectLocation) {
-          resolve({
-            redirect: {
-              url: redirectLocation.pathname + redirectLocation.search,
-            },
-          })
-        } else if (renderProps) {
-          // Find all static method called `fetchData` and execute, then wait for all promises to resolve. Then resolve with element. At this point, the store is filled with state already.
-          const prefetchMethods = renderProps.components
-            .filter(c => c.fetchData)
-            .reduce((acc, c) => acc.concat(c.fetchData), [])
 
-          const promises = prefetchMethods
-            .map(prefetch => prefetch(store))
+  if (redirect) {
+    return {redirect}
+  }
 
-          await Promise.all(promises)
+  const content = ReactDOMServer.renderToString(element)
 
-          const element = (
-            <ApolloProvider client={client} store={store}>
-              <RouterContext {...renderProps} />
-            </ApolloProvider>
-          )
-
-          await getDataFromTree(element)
-
-          const content = ReactDOMServer.renderToString(element)
-
-          const moduleIds = flushModuleIds()
-          const { js, styles } = flushChunks(stats, {
-            moduleIds,
-            before: ['vendor'],
-            after: ['main'],
-          })
-
-          resolve({
-            content,
-            scripts: js,
-            styles,
-            data: store.getState(),
-          })
-        } else {
-          console.warn('not found', req.url)
-        }
-      }
-    )
+  const moduleIds = flushModuleIds()
+  const { js, styles } = flushChunks(stats, {
+    moduleIds,
+    before: ['vendor'],
+    after: ['main'],
   })
+
+  return {
+    content,
+    scripts: js,
+    styles,
+    data: fetcher,
+  }
 }
 
 export default matchRoute
