@@ -82,6 +82,7 @@ const server = {
         plugins: [
           'relay',
           transformRuntime,
+          'transform-class-properties',
           'transform-es2015-classes',
         ],
       },
