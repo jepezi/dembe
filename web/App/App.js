@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
+import Link from 'found/lib/Link'
 import Header from 'Header/Header'
-import {Link} from 'react-router'
 import css from './App.module.scss'
 
 class App extends React.Component {

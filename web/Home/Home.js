@@ -1,39 +1,43 @@
 // @flow
 import React from 'react'
-import {gql, graphql} from 'react-apollo'
+import {createFragmentContainer, graphql} from 'react-relay'
 import PostList from 'Posts/PostList'
 
 class Home extends React.Component {
   render() {
-    const {data: {viewer, error, loading}} = this.props
-    if (error != null) {
-      return (
-        <p>There is error</p>
-      )
-    }
+    const {viewer} = this.props
     return (
       <div>
         <h1>Latest Posts</h1>
         <div>
-          {loading && <div>Loading...</div>}
-          {viewer && <PostList data={viewer.posts} />}
+          <PostList viewer={viewer} />
         </div>
       </div>
     )
   }
 }
 
-const WithData = graphql(gql`
-  query {
-    viewer {
+export default createFragmentContainer(
+  Home,
+  graphql`
+    fragment Home_viewer on Viewer {
       id
-      posts {
-        id
-        title
-        description
-      }
+      ...PostList_viewer
     }
-  }
-`)(Home)
+  `,
+)
 
-export default WithData
+// const WithData = graphql(gql`
+//   query {
+//     viewer {
+//       id
+//       posts {
+//         id
+//         title
+//         description
+//       }
+//     }
+//   }
+// `)(Home)
+//
+// export default WithData
