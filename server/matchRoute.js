@@ -1,27 +1,52 @@
 // @flow
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import { flushModuleIds } from 'react-universal-component/server'
+import {flushModuleIds} from 'react-universal-component/server'
 import flushChunks from 'webpack-flush-chunks'
-import routes from '../web/routes'
-import {getFarceResult} from 'found/lib/server'
+import {Provider} from 'react-redux'
+import {Actions as FarceActions, ServerProtocol} from 'farce'
+import {getStoreRenderArgs, RedirectException} from 'found'
+import {RouterProvider} from 'found/lib/server'
+
+import createReduxStore from '../web/createReduxStore'
+import {render, createResolver} from '../web/router'
 import {ServerFetcher} from '../web/fetcher'
-import {historyMiddlewares, render, createResolver} from '../web/router'
 
 async function matchRoute(req: any, {stats}: any) {
-  const fetcher = new ServerFetcher('http://localhost:8000/api/graphql')
-
-  const { redirect, status, element } = await getFarceResult({
-    url: req.url,
-    historyMiddlewares,
-    routeConfig: routes,
-    resolver: createResolver(fetcher),
-    render,
+  const store = createReduxStore({
+    historyProtocol: new ServerProtocol(req.url),
   })
+  const matchContext = { store }
+  const fetcher = new ServerFetcher('http://localhost:8000/api/graphql')
+  let renderArgs
 
-  if (redirect) {
-    return {redirect}
+  try {
+    renderArgs = await getStoreRenderArgs({
+      store,
+      matchContext,
+      resolver: createResolver(fetcher),
+    })
+  } catch (e) {
+    if (e instanceof RedirectException) {
+      return {
+        redirect: {
+          url: store.farce.createHref(e.location),
+        },
+      }
+    }
+
+    throw e
+  } finally {
+    store.dispatch(FarceActions.dispose())
   }
+
+  const element = (
+    <Provider store={store}>
+      <RouterProvider router={renderArgs.router}>
+        {render(renderArgs)}
+      </RouterProvider>
+    </Provider>
+  )
 
   const content = ReactDOMServer.renderToString(element)
 
@@ -36,7 +61,8 @@ async function matchRoute(req: any, {stats}: any) {
     content,
     scripts: js,
     styles,
-    data: fetcher,
+    reduxData: store.getState(),
+    relayData: fetcher,
   }
 }
 
