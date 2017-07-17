@@ -13,8 +13,8 @@ const babelPresets = [
       debug: true
     }
   ],
-  'stage-2',
   'react',
+  'stage-2',
 ]
 
 const transformRuntime = [
@@ -34,7 +34,12 @@ const dev = {
       loader: 'babel-loader',
       options: {
         presets: babelPresets.concat(['react-hmre']),
-        plugins: ['relay', transformRuntime],
+        plugins: [
+          'relay',
+          transformRuntime,
+          'transform-class-properties',
+          'transform-es2015-classes',
+        ],
       }
     }
   ]
@@ -51,6 +56,8 @@ const prod = {
         plugins: [
           'relay',
           transformRuntime,
+          'transform-class-properties',
+          'transform-es2015-classes',
           'transform-react-inline-elements',
           'transform-react-pure-class-to-function',
           'transform-react-constant-elements'
@@ -76,8 +83,8 @@ const server = {
               }
             }
           ],
+          'react',
           'stage-2',
-          'react'
         ],
         plugins: [
           'relay',
