@@ -70,12 +70,11 @@ module.exports = {
     new webpack.SourceMapDevToolPlugin({
       test: /.js$/,
       filename: '[file].map',
-      append: '\n//# sourceMappingURL=/build/js/[url]'
+      exclude: [/vendor/, /manifest/]
     }),
     new webpack.SourceMapDevToolPlugin({
       test: /.css$/,
       filename: '[file].map',
-      append: '\n//# sourceMappingURL=/build/css/[url]'
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
