@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import {flushModuleIds, flushChunkNames} from 'react-universal-component/server'
 import flushChunks from 'webpack-flush-chunks'
 import {Provider} from 'react-redux'
 import {Actions as FarceActions, ServerProtocol} from 'farce'
@@ -16,7 +15,7 @@ async function matchRoute(req: any, {stats}: any) {
   const store = createReduxStore({
     historyProtocol: new ServerProtocol(req.url),
   })
-  const matchContext = { store }
+  const matchContext = { store, chunks: [] }
   const fetcher = new ServerFetcher('http://localhost:8000/api/graphql')
   let renderArgs
 
@@ -50,7 +49,8 @@ async function matchRoute(req: any, {stats}: any) {
 
   const content = ReactDOMServer.renderToString(element)
 
-  const chunkNames = flushChunkNames()
+  // const chunkNames = flushChunkNames()
+  const chunkNames = matchContext.chunks
   const { js, styles } = flushChunks(stats, {
     chunkNames,
     before: ['vendor'],

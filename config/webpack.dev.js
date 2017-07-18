@@ -30,6 +30,10 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.NormalModuleReplacementPlugin(
+      /bundles.js/,
+      './asyncBundles.js'
+    ),
     new webpack.LoaderOptionsPlugin({
       minimize: false,
       debug: true

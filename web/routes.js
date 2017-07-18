@@ -1,15 +1,16 @@
-import universal from 'react-universal-component'
+// import universal from 'react-universal-component'
 import {graphql} from 'react-relay'
 import App from './App/App'
+import {AsyncHome, AsyncAbout} from './bundles';
 
-const AsyncHome = universal(() => import('./Home/Home'), {
-  resolve: () => require.resolveWeak('./Home/Home'),
-  chunkName: 'Home/Home',
-})
-const AsyncAbout = universal(() => import('./About/About'), {
-  resolve: () => require.resolveWeak('./About/About'),
-  chunkName: 'About/About',
-})
+// const AsyncHome = universal(() => import('./Home/Home'), {
+//   resolve: () => require.resolveWeak('./Home/Home'),
+//   chunkName: 'Home/Home',
+// })
+// const AsyncAbout = universal(() => import('./About/About'), {
+//   resolve: () => require.resolveWeak('./About/About'),
+//   chunkName: 'About/About',
+// })
 
 const routes = [{
   path: '/',

@@ -34,6 +34,10 @@ module.exports = {
   },
   recordsPath: path.resolve(paths.root, 'webpack-records.json'),
   plugins: [
+    new webpack.NormalModuleReplacementPlugin(
+      /bundles.js/,
+      './asyncBundles.js'
+    ),
     new StatsPlugin('stats.json', {
       chunkModules: true,
       exclude: [/node_modules[\\\/]react/],
