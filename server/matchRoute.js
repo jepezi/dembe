@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import {flushModuleIds} from 'react-universal-component/server'
+import {flushModuleIds, flushChunkNames} from 'react-universal-component/server'
 import flushChunks from 'webpack-flush-chunks'
 import {Provider} from 'react-redux'
 import {Actions as FarceActions, ServerProtocol} from 'farce'
@@ -50,9 +50,9 @@ async function matchRoute(req: any, {stats}: any) {
 
   const content = ReactDOMServer.renderToString(element)
 
-  const moduleIds = flushModuleIds()
+  const chunkNames = flushChunkNames()
   const { js, styles } = flushChunks(stats, {
-    moduleIds,
+    chunkNames,
     before: ['vendor'],
     after: ['main'],
   })

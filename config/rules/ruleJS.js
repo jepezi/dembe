@@ -36,6 +36,7 @@ const dev = {
         presets: babelPresets.concat(['react-hmre']),
         plugins: [
           'relay',
+          'dual-import',
           transformRuntime,
           'transform-class-properties',
           'transform-es2015-classes',
@@ -55,6 +56,7 @@ const prod = {
         presets: babelPresets,
         plugins: [
           'relay',
+          'dual-import',
           transformRuntime,
           'transform-class-properties',
           'transform-es2015-classes',
@@ -88,6 +90,7 @@ const server = {
         ],
         plugins: [
           'relay',
+          'dual-import',
           transformRuntime,
           'transform-class-properties',
           'transform-es2015-classes',
