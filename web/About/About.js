@@ -1,11 +1,12 @@
 // @flow
 import React from 'react'
 import {connect} from 'react-redux'
+import css from './About.module.scss'
 
 class About extends React.Component {
   render() {
     return (
-      <div>
+      <div className={css.container}>
         <h1>About</h1>
         <div>
           <div>

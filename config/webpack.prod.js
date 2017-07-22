@@ -2,6 +2,7 @@ const webpack = require('webpack')
 const path = require('path')
 const AssetsPlugin = require('assets-webpack-plugin')
 const StatsPlugin = require('stats-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
 const paths = require('./paths')
 const vendors = require('./vendors')
@@ -42,8 +43,9 @@ module.exports = {
       chunkModules: true,
       exclude: [/node_modules[\\\/]react/],
     }),
-    new ExtractCssChunks({
+    new ExtractTextPlugin({
       filename: 'css/[name].[contenthash].css',
+      allChunks: true,
     }),
     new webpack.HashedModuleIdsPlugin(), // only needed when server built with webpack
     new webpack.optimize.ModuleConcatenationPlugin(),

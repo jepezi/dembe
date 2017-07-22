@@ -31,8 +31,8 @@ const cssModuleDev = {
 
 const cssModuleProd = {
   test: /\.module\.s?css$/,
-  use: ExtractCssChunks.extract({
-    // fallback: 'style-loader',
+  use: ExtractTextPlugin.extract({
+    fallback: 'style-loader',
     use: [
       {
         loader: 'css-loader',
@@ -110,8 +110,8 @@ const globalDev = {
 // any.scss (prod)
 const globalProd = {
   test: /^((?!\.module\.).)*\.s?css$/,
-  use: ExtractCssChunks.extract({
-    // fallback: 'style-loader',
+  use: ExtractTextPlugin.extract({
+    fallback: 'style-loader',
     use: [
       {
         loader: 'css-loader',
