@@ -51,7 +51,7 @@ async function matchRoute(req: any, {stats}: any) {
 
   // const chunkNames = flushChunkNames()
   const chunkNames = matchContext.chunks
-  const { js, styles } = flushChunks(stats, {
+  const { scripts, stylesheets } = flushChunks(stats, {
     chunkNames,
     before: ['vendor'],
     after: ['main'],
@@ -59,8 +59,8 @@ async function matchRoute(req: any, {stats}: any) {
 
   return {
     content,
-    scripts: js,
-    styles,
+    scripts,
+    stylesheets,
     reduxData: store.getState(),
     relayData: fetcher,
   }
