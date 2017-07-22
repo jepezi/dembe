@@ -18,7 +18,6 @@ function asyncComponent(getComponent) {
     }
 
     componentWillMount() {
-      console.warn('wm',this.state.Component)
       if(this.state.Component === null) {
         AsyncComponent.loadComponent()
         .then(Component => {
@@ -38,7 +37,6 @@ function asyncComponent(getComponent) {
     }
 
     render() {
-      console.warn(this.props)
       const {Component} = this.state
 
       if(Component !== null) {
