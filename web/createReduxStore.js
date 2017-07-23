@@ -16,6 +16,8 @@ function thunk({ dispatch, getState }) {
       next(action)
 }
 
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+
 export default function createReduxStore({initialState, historyProtocol}) {
   const store = createStore(
     combineReducers({
@@ -23,7 +25,7 @@ export default function createReduxStore({initialState, historyProtocol}) {
       found: foundReducer,
     }),
     initialState,
-    compose(
+    composeEnhancers(
       createHistoryEnhancer({
         protocol: historyProtocol,
         middlewares: [queryMiddleware],
