@@ -1,6 +1,7 @@
 const paths = require('../paths')
 
 const babelPresets = [
+  'react',
   [
     'env',
     {
@@ -13,7 +14,6 @@ const babelPresets = [
       debug: true
     }
   ],
-  'react',
   'stage-2',
 ]
 
@@ -38,8 +38,6 @@ const dev = {
           'relay',
           // 'dual-import',
           transformRuntime,
-          'transform-class-properties',
-          'transform-es2015-classes',
         ],
       }
     }
@@ -58,8 +56,6 @@ const prod = {
           'relay',
           // 'dual-import',
           transformRuntime,
-          'transform-class-properties',
-          'transform-es2015-classes',
           'transform-react-inline-elements',
           'transform-react-pure-class-to-function',
           'transform-react-constant-elements'
@@ -77,15 +73,19 @@ const server = {
       loader: 'babel-loader',
       options: {
         presets: [
+          'react',
           [
             'env',
             {
               targets: {
                 node: 'current'
-              }
+              },
+              modules: false,
+              useBuiltIns: false,
+              loose: true,
+              debug: true,
             }
           ],
-          'react',
           'stage-2',
         ],
         plugins: [
